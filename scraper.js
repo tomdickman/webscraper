@@ -8,12 +8,22 @@ const puppeteer = require("puppeteer")
  * @return {String} Stringified HTML including embedded script tags etc.
  */
 module.exports.getContent = async function(targetUrl) {
-    browser = await puppeteer.launch({args: ['--no-sandbox'], headless: true})
-    page = await browser.newPage()
-    await page.setUserAgent("Lambda scraper")
-    await page.goto(targetUrl)
-    const content =  await page.content()
-    await browser.close()
+    let browser = null;
+    let content = '';
+
+    try {
+        browser = await puppeteer.launch({args: ['--no-sandbox'], headless: true})
+        const page = await browser.newPage()
+        await page.setUserAgent("Lambda scraper")
+        await page.goto(targetUrl)
+        content =  await page.content()
+    } catch(error) {
+        console.error(error.message)
+    } finally {
+        if (browser !== null) {
+            await browser.close()
+        }
+    }
 
     return content
 }
