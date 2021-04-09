@@ -11,7 +11,7 @@ app.get('/', function(request, response) {
     if (targetUrl !== undefined) {
         scraper.getContent(targetUrl)
             .then(content => response.status(200).json(content))
-            .catch(exception => console.log(exception.message))
+            .catch(exception => console.error(exception.message))
     } else {
         response.status(400).json("No valid URL provided")
     }
